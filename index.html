@@ -4,130 +4,125 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Конструктор заданий</title>
-  <!-- Подключаем библиотеку Telegram -->
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
-      padding: 20px;
-      background-color: var(--tg-theme-bg-color, #f4f4f9);
+      padding: 16px;
+      background: var(--tg-theme-bg-color, #f7f9fa);
       color: var(--tg-theme-text-color, #222);
       box-sizing: border-box;
     }
-    h2 {
-      margin-top: 0;
-      font-size: 20px;
-      text-align: center;
-    }
-    label {
-      font-weight: 600;
-      font-size: 14px;
-      display: block;
-      margin-top: 14px;
-      margin-bottom: 6px;
-    }
+    h2 { margin-top: 0; font-size: 20px; text-align: center; }
+    label { font-weight: 600; font-size: 14px; display: block; margin-top: 12px; margin-bottom: 4px; }
     select, input {
       width: 100%;
       padding: 12px;
       border: 1px solid #ccc;
       border-radius: 10px;
       font-size: 15px;
-      box-sizing: border-box;
       background: var(--tg-theme-secondary-bg-color, #fff);
       color: var(--tg-theme-text-color, #000);
+      box-sizing: border-box;
       outline: none;
     }
     button {
-      margin-top: 24px;
+      margin-top: 20px;
       width: 100%;
       padding: 14px;
       border: none;
       border-radius: 10px;
-      background-color: var(--tg-theme-button-color, #2481cc);
+      background: var(--tg-theme-button-color, #2481cc);
       color: var(--tg-theme-button-text-color, #fff);
       font-size: 16px;
       font-weight: bold;
       cursor: pointer;
     }
-    button:active {
-      opacity: 0.85;
+    .hint {
+      margin-top: 12px;
+      font-size: 12px;
+      color: #777;
+      text-align: center;
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
 
-  <h2>Параметры задания</h2>
+  <h2>Конструктор заданий</h2>
 
-  <label for="subject">Предмет:</label>
+  <label>Предмет:</label>
   <select id="subject">
-    <option value="Математике">Математика</option>
-    <option value="Русскому языку">Русский язык</option>
-    <option value="Литературе">Литература</option>
-    <option value="Истории">История</option>
-    <option value="Биологии">Биология</option>
-    <option value="Физике">Физика</option>
-    <option value="Химии">Химия</option>
-    <option value="Английскому языку">Английский язык</option>
+    <option>Математика</option>
+    <option>Русский язык</option>
+    <option>Литература</option>
+    <option>История</option>
+    <option>Биология</option>
+    <option>Физика</option>
+    <option>Химия</option>
+    <option>Английский язык</option>
   </select>
 
-  <label for="grade">Класс / Уровень:</label>
+  <label>Класс:</label>
   <select id="grade">
-    <option value="1-4 класс">Начальная школа (1-4 класс)</option>
-    <option value="5-6 класс">5–6 класс</option>
-    <option value="7-8 класс">7–8 класс</option>
-    <option value="9 класс (подготовка к ОГЭ)">9 класс (ОГЭ)</option>
-    <option value="10-11 класс (подготовка к ЕГЭ)">10–11 класс (ЕГЭ)</option>
+    <option>1–4 класс</option>
+    <option>5–6 класс</option>
+    <option>7–8 класс</option>
+    <option>9 класс (ОГЭ)</option>
+    <option>10–11 класс (ЕГЭ)</option>
   </select>
 
-  <label for="type">Тип задания:</label>
+  <label>Тип задания:</label>
   <select id="type">
-    <option value="Карточку с 3 разноуровневыми заданиями">Карточка (3 уровня сложности)</option>
-    <option value="Тест/викторину из 4 вопросов с вариантами ответов">Тест с вариантами ответов</option>
-    <option value="Текст с 3 фактическими ошибками для проверки внимательности">Текст с ошибками-ловушками</option>
-    <option value="Текст с пропусками терминов">Текст с пропусками слов</option>
+    <option>Карточка (3 уровня сложности)</option>
+    <option>Тест с 4 вариантами ответов</option>
+    <option>Текст с ошибками-ловушками</option>
+    <option>Текст с пропусками терминов</option>
   </select>
 
-  <label for="topic">Тема урока:</label>
-  <input type="text" id="topic" placeholder="Например: Дроби, Крещение Руси, Фотосинтез...">
+  <label>Тема урока:</label>
+  <input type="text" id="topic" placeholder="Например: Дроби или Крещение Руси">
 
-  <button id="sendBtn">✨ Создать задание</button>
+  <button id="sendBtn">✨ Сформировать и скопировать</button>
+  <div class="hint">Параметры скопируются в буфер обмена. Просто вставьте их в поле чата и отправьте боту.</div>
 
-   <script>
+  <script>
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
       tg.expand();
     }
 
-    document.getElementById('sendBtn').addEventListener('click', () => {
+    document.getElementById('sendBtn').addEventListener('click', async () => {
       const subject = document.getElementById('subject').value;
       const grade = document.getElementById('grade').value;
       const type = document.getElementById('type').value;
       const topicInput = document.getElementById('topic').value.trim();
       const topic = topicInput ? topicInput : "общая тема программы";
 
-      // Текст запроса для бота
-      const promptText = Сгенерируй ${type} по предмету ${subject} для ${grade}. Тема: ${topic}.;
+      const promptText = Сгенерируй ${type} по предмету ${subject} для ${grade}. Тема: "${topic}".;
 
-      // 1. Пробуем стандартный метод Telegram
+      // Копируем готовый промпт в буфер обмена
       try {
-        if (tg && tg.sendData) {
-          tg.sendData(promptText);
+        await navigator.clipboard.writeText(promptText);
+        if (tg && tg.showAlert) {
+          tg.showAlert('Запрос скопирован! Вставьте его в поле ввода сообщения бота.', () => {
+            tg.close();
+          });
+        } else {
+          alert('Запрос скопирован! Вставьте его в поле ввода сообщения бота.');
+          if (tg && tg.close) tg.close();
         }
-      } catch (e) {}
-
-      // 2. Универсальный способ: открытие чата с готовым сообщением
-      const botUrl = https://t.me/Teacher20_Assistant_bot?text=${encodeURIComponent(promptText)};
-      
-      if (tg && tg.openTelegramLink) {
-        tg.openTelegramLink(botUrl);
-      } else {
-        window.location.href = botUrl;
-      }
-
-      if (tg && tg.close) {
-        tg.close();
+      } catch (err) {
+        // Запасной вариант копирования
+        const tempInput = document.createElement("textarea");
+        tempInput.value = promptText;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        if (tg && tg.close) tg.close();
       }
     });
   </script>
