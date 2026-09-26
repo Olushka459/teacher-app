@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Конструктор заданий</title>
+  <!-- Подключаем библиотеку Telegram -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--tg-theme-bg-color, #f4f4f9);
+      color: var(--tg-theme-text-color, #222);
+      box-sizing: border-box;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 20px;
+      text-align: center;
+    }
+    label {
+      font-weight: 600;
+      font-size: 14px;
+      display: block;
+      margin-top: 14px;
+      margin-bottom: 6px;
+    }
+    select, input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 15px;
+      box-sizing: border-box;
+      background: var(--tg-theme-secondary-bg-color, #fff);
+      color: var(--tg-theme-text-color, #000);
+      outline: none;
+    }
+    button {
+      margin-top: 24px;
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--tg-theme-button-color, #2481cc);
+      color: var(--tg-theme-button-text-color, #fff);
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:active {
+      opacity: 0.85;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Параметры задания</h2>
+
+  <label for="subject">Предмет:</label>
+  <select id="subject">
+    <option value="Математике">Математика</option>
+    <option value="Русскому языку">Русский язык</option>
+    <option value="Литературе">Литература</option>
+    <option value="Истории">История</option>
+    <option value="Биологии">Биология</option>
+    <option value="Физике">Физика</option>
+    <option value="Химии">Химия</option>
+    <option value="Английскому языку">Английский язык</option>
+  </select>
+
+  <label for="grade">Класс / Уровень:</label>
+  <select id="grade">
+    <option value="1-4 класс">Начальная школа (1-4 класс)</option>
+    <option value="5-6 класс">5–6 класс</option>
+    <option value="7-8 класс">7–8 класс</option>
+    <option value="9 класс (подготовка к ОГЭ)">9 класс (ОГЭ)</option>
+    <option value="10-11 класс (подготовка к ЕГЭ)">10–11 класс (ЕГЭ)</option>
+  </select>
+
+  <label for="type">Тип задания:</label>
+  <select id="type">
+    <option value="Карточку с 3 разноуровневыми заданиями">Карточка (3 уровня сложности)</option>
+    <option value="Тест/викторину из 4 вопросов с вариантами ответов">Тест с вариантами ответов</option>
+    <option value="Текст с 3 фактическими ошибками для проверки внимательности">Текст с ошибками-ловушками</option>
+    <option value="Текст с пропусками терминов">Текст с пропусками слов</option>
+  </select>
+
+  <label for="topic">Тема урока:</label>
+  <input type="text" id="topic" placeholder="Например: Дроби, Крещение Руси, Фотосинтез...">
+
+  <button id="sendBtn">✨ Создать задание</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.ready();
+    tg.expand(); // Разворачиваем окно на весь экран
+
+    document.getElementById('sendBtn').addEventListener('click', () => {
+      const subject = document.getElementById('subject').value;
+      const grade = document.getElementById('grade').value;
+      const type = document.getElementById('type').value;
+      const topicInput = document.getElementById('topic').value.trim();
+      const topic = topicInput ? topicInput : "общая тема программы";
+
+      // Текст, который уйдет в чат боту:
+      const promptText = Сгенерируй ${type} по предмету ${subject} для ${grade}. Тема: "${topic}". Оформи аккуратно и понятно.;
+
+      // Метод Telegram отправляет этот текст напрямую боту от лица пользователя
+      tg.sendData(promptText);
+      tg.close();
+    });
+  </script>
+</body>
+</html>
