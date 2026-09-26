@@ -93,10 +93,12 @@
 
   <button id="sendBtn">✨ Создать задание</button>
 
-  <script>
-    const tg = window.Telegram.WebApp;
-    tg.ready();
-    tg.expand(); // Разворачиваем окно на весь экран
+   <script>
+    const tg = window.Telegram?.WebApp;
+    if (tg) {
+      tg.ready();
+      tg.expand();
+    }
 
     document.getElementById('sendBtn').addEventListener('click', () => {
       const subject = document.getElementById('subject').value;
@@ -105,12 +107,28 @@
       const topicInput = document.getElementById('topic').value.trim();
       const topic = topicInput ? topicInput : "общая тема программы";
 
-      // Текст, который уйдет в чат боту:
-      const promptText = Сгенерируй ${type} по предмету ${subject} для ${grade}. Тема: "${topic}". Оформи аккуратно и понятно.;
+      // Текст запроса для бота
+      const promptText = Сгенерируй ${type} по предмету ${subject} для ${grade}. Тема: ${topic}.;
 
-      // Метод Telegram отправляет этот текст напрямую боту от лица пользователя
-      tg.sendData(promptText);
-      tg.close();
+      // 1. Пробуем стандартный метод Telegram
+      try {
+        if (tg && tg.sendData) {
+          tg.sendData(promptText);
+        }
+      } catch (e) {}
+
+      // 2. Универсальный способ: открытие чата с готовым сообщением
+      const botUrl = https://t.me/Teacher20_Assistant_bot?text=${encodeURIComponent(promptText)};
+      
+      if (tg && tg.openTelegramLink) {
+        tg.openTelegramLink(botUrl);
+      } else {
+        window.location.href = botUrl;
+      }
+
+      if (tg && tg.close) {
+        tg.close();
+      }
     });
   </script>
 </body>
